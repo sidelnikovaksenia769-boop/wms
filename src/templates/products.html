@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Товары — WMS{% endblock %}
+{% block content %}
+<h2>Список товаров</h2>
+<p class="subtitle">Доступно всем авторизованным пользователям</p>
+{% if products %}
+<table class="data-table">
+    <thead><tr><th>ID</th><th>SKU</th><th>Название</th><th>Мин. остаток</th><th>Цена</th></tr></thead>
+    <tbody>
+    {% for p in products %}
+        <tr><td>{{ p.id }}</td><td>{{ p.sku }}</td><td>{{ p.name }}</td><td>{{ p.min_qty }}</td><td>{{ p.price }}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-error">Товары пока не добавлены в базу.</div>
+{% endif %}
+<p class="switch"><a href="/dashboard">← Вернуться в кабинет</a></p>
+{% endblock %}

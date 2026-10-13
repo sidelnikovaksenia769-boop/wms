@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Личный кабинет — WMS{% endblock %}
+{% block content %}
+<h2>Личный кабинет</h2>
+<p class="subtitle">Профиль пользователя</p>
+<div class="dashboard-info">
+    <p><strong>ID:</strong> <code>{{ user.id }}</code></p>
+    <p><strong>Логин:</strong> <code>{{ user.username }}</code></p>
+    <p><strong>Email:</strong> <code>{{ user.email }}</code></p>
+    <p><strong>ФИО:</strong> {{ user.full_name or "—" }}</p>
+    <p><strong>Роль:</strong> <span class="role-badge role-{{ user.role }}">{{ user.role }}</span></p>
+    <p><strong>Дата регистрации:</strong> {{ user.created_at.strftime("%d.%m.%Y %H:%M") }}</p>
+</div>
+<p class="switch">
+    <a href="/dashboard">← В кабинет</a> | <a href="/products">Товары</a>
+    {% if user.role == "admin" %} | <a href="/admin/users">Пользователи</a>{% endif %}
+</p>
+{% endblock %}

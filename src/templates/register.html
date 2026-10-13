@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Регистрация — WMS{% endblock %}
+{% block content %}
+<h2>Регистрация</h2>
+{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+<form method="post" action="/auth/register" novalidate>
+    <label>Логин
+        <input type="text" name="username" required minlength="3" maxlength="50"
+               pattern="[A-Za-z0-9_\-]+" autocomplete="username">
+    </label>
+    <label>Email
+        <input type="email" name="email" required maxlength="120" autocomplete="email">
+    </label>
+    <label>ФИО
+        <input type="text" name="full_name" maxlength="150" autocomplete="name">
+    </label>
+    <label>Пароль
+        <input type="password" name="password" required minlength="8" maxlength="72"
+               autocomplete="new-password">
+        <small>Минимум 8 символов, хотя бы одна буква и одна цифра</small>
+    </label>
+    <button type="submit">Зарегистрироваться</button>
+</form>
+<p class="switch">Уже есть аккаунт? <a href="/login">Войти</a></p>
+{% endblock %}

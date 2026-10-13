@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Пользователи — WMS{% endblock %}
+{% block content %}
+<h2>Список пользователей</h2>
+<p class="subtitle">Доступно только администратору</p>
+<table class="data-table">
+    <thead><tr><th>ID</th><th>Логин</th><th>Email</th><th>ФИО</th><th>Роль</th></tr></thead>
+    <tbody>
+    {% for u in users %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.full_name or "—" }}</td>
+            <td><span class="role-badge role-{{ u.role }}">{{ u.role }}</span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<p class="switch"><a href="/dashboard">← Вернуться в кабинет</a></p>
+{% endblock %}

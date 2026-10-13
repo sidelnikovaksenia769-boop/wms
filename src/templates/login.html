@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Вход — WMS{% endblock %}
+{% block content %}
+<h2>Вход в систему</h2>
+{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+<form method="post" action="/auth/login" novalidate>
+    <label>Логин
+        <input type="text" name="username" required autocomplete="username" autofocus>
+    </label>
+    <label>Пароль
+        <input type="password" name="password" required autocomplete="current-password">
+    </label>
+    <button type="submit">Войти</button>
+</form>
+<p class="switch">Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+{% endblock %}
