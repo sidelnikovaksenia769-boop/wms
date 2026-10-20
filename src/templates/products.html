@@ -1,19 +1,34 @@
 {% extends "base.html" %}
 {% block title %}Товары — WMS{% endblock %}
 {% block content %}
-<h2>Список товаров</h2>
-<p class="subtitle">Доступно всем авторизованным пользователям</p>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <h2 style="margin:0;">Список товаров</h2>
+    <a class="nav-btn" href="/products/new">+ Добавить</a>
+</div>
 {% if products %}
 <table class="data-table">
-    <thead><tr><th>ID</th><th>SKU</th><th>Название</th><th>Мин. остаток</th><th>Цена</th></tr></thead>
+    <thead><tr><th>ID</th><th>SKU</th><th>Название</th><th>Мин</th><th>Цена</th><th>Действия</th></tr></thead>
     <tbody>
     {% for p in products %}
-        <tr><td>{{ p.id }}</td><td>{{ p.sku }}</td><td>{{ p.name }}</td><td>{{ p.min_qty }}</td><td>{{ p.price }}</td></tr>
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.sku }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.min_qty }}</td>
+            <td>{{ p.price }}</td>
+            <td>
+                <a href="/products/{{ p.id }}/edit" class="action-btn edit">✎</a>
+                <form method="post" action="/products/{{ p.id }}/delete" style="display:inline"
+                      onsubmit="return confirm('Удалить {{ p.name }}?')">
+                    <button type="submit" class="action-btn delete">🗑</button>
+                </form>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
 {% else %}
-<div class="alert alert-error">Товары пока не добавлены в базу.</div>
+<div class="alert alert-error">Товаров нет. <a href="/products/new">Создать →</a></div>
 {% endif %}
-<p class="switch"><a href="/dashboard">← Вернуться в кабинет</a></p>
+<p class="switch"><a href="/dashboard">← В кабинет</a></p>
 {% endblock %}

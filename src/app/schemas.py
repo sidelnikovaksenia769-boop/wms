@@ -26,3 +26,17 @@ class UserRegister(BaseModel):
 class UserLogin(BaseModel):
     username: str
     password: str
+
+
+# ========== Товар (CRUD) ==========
+class ProductCreate(BaseModel):
+    sku: str = Field(min_length=2, max_length=50)
+    name: str = Field(min_length=2, max_length=255)
+    min_qty: float = Field(default=0, ge=0)
+    price: float = Field(default=0, ge=0)
+
+
+class ProductUpdate(BaseModel):
+    name: str = Field(min_length=2, max_length=255)
+    min_qty: float = Field(ge=0)
+    price: float = Field(ge=0)

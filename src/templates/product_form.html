@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ "Редактирование" if product else "Новый товар" }} — WMS{% endblock %}
+{% block content %}
+<h2>{{ "Редактирование" if product else "Новый товар" }}</h2>
+{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+<form method="post" action="{{ '/products/' ~ product.id ~ '/edit' if product and product.id else '/products/new' }}">
+    {% if product and product.id %}
+    <label>SKU <input type="text" value="{{ product.sku }}" disabled><small>нельзя изменить</small></label>
+    {% else %}
+    <label>SKU <input type="text" name="sku" required minlength="2" maxlength="50"></label>
+    {% endif %}
+    <label>Название <input type="text" name="name" required minlength="2" maxlength="255"
+           value="{{ product.name if product and product.name else '' }}"></label>
+    <label>Мин. остаток <input type="number" name="min_qty" step="0.001" min="0"
+           value="{{ product.min_qty if product and product.min_qty is not none else 0 }}"></label>
+    <label>Цена <input type="number" name="price" step="0.01" min="0"
+           value="{{ product.price if product and product.price is not none else 0 }}"></label>
+    <button type="submit">{{ "Сохранить" if product and product.id else "Создать" }}</button>
+</form>
+<p class="switch"><a href="/products">← Назад</a></p>
+{% endblock %}
