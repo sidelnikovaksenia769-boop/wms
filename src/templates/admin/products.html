@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Все товары — Админ{% endblock %}
+{% block content %}
+<h2>Все товары (Админ)</h2>
+<table class="data-table">
+    <thead><tr><th>ID</th><th>SKU</th><th>Название</th><th>Цена</th><th>Остаток</th><th>Создан</th></tr></thead>
+    <tbody>
+    {% for p in products %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.sku }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.price }}</td>
+            <td>{{ p.min_qty }}</td>
+            <td>{{ p.created_at }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="nav-menu" style="margin-top:20px;">
+    <a href="/admin" class="nav-btn" style="background:#6b7280;">← В админку</a>
+</div>
+{% endblock %}

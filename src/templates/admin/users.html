@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Все пользователи — Админ{% endblock %}
+{% block content %}
+<h2>Все пользователи</h2>
+<table class="data-table">
+    <thead><tr><th>ID</th><th>Логин</th><th>Email</th><th>ФИО</th><th>Роль</th><th>Активен</th></tr></thead>
+    <tbody>
+    {% for u in users %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.full_name or "—" }}</td>
+            <td><span class="role-badge role-{{ u.role }}">{{ u.role }}</span></td>
+            <td>{{ "Да" if u.is_active else "Нет" }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="nav-menu" style="margin-top:20px;">
+    <a href="/admin" class="nav-btn" style="background:#6b7280;">← В админку</a>
+</div>
+{% endblock %}

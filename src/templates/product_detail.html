@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — WMS{% endblock %}
+{% block content %}
+<h2>Детали товара</h2>
+<p class="subtitle">Просмотр карточки</p>
+
+<div class="dashboard-info" style="background:#fff; border:1px solid #e5e7eb;">
+    <p><strong>ID:</strong> <code>{{ product.id }}</code></p>
+    <p><strong>Артикул (SKU):</strong> <code>{{ product.sku }}</code></p>
+    <p><strong>Наименование:</strong> {{ product.name }}</p>
+    <p><strong>Минимальный остаток:</strong> {{ product.min_qty }}</p>
+    <p><strong>Цена:</strong> {{ product.price }} ₽</p>
+    <p><strong>Статус:</strong> {{ "Активен" if product.is_active else "В архиве" }}</p>
+    <p><strong>Создан:</strong> {{ product.created_at }}</p>
+    <p><strong>Обновлён:</strong> {{ product.updated_at }}</p>
+</div>
+
+<div class="nav-menu" style="margin-top:20px;">
+    <a href="/products" class="nav-btn" style="background:#6b7280;">← Назад к списку</a>
+    <a href="/products/{{ product.id }}/edit" class="nav-btn">Редактировать</a>
+</div>
+{% endblock %}

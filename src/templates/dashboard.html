@@ -2,11 +2,18 @@
 {% block title %}Панель — WMS{% endblock %}
 {% block content %}
 <h2>Добро пожаловать, {{ user.full_name or user.username }}!</h2>
-<p class="subtitle">Роль: <strong>{{ user.role }}</strong></p>
+<p class="subtitle">Роль: <span class="role-badge role-{{ user.role }}">{{ user.role }}</span></p>
 <div class="dashboard-info">
     <p>Логин: <code>{{ user.username }}</code></p>
     <p>Email: <code>{{ user.email }}</code></p>
     <p>Создан: {{ user.created_at.strftime("%d.%m.%Y %H:%M") }}</p>
+</div>
+<div class="nav-menu">
+    <a class="nav-btn" href="/profile">Личный кабинет</a>
+    <a class="nav-btn" href="/products">Товары</a>
+    {% if user.role == "admin" %}
+    <a class="nav-btn" style="background:#991b1b;" href="/admin">Панель администратора</a>
+    {% endif %}
 </div>
 <a class="btn-logout" href="/auth/logout">Выйти</a>
 {% endblock %}

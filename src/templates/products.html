@@ -5,6 +5,16 @@
     <h2 style="margin:0;">Список товаров</h2>
     <a class="nav-btn" href="/products/new">+ Добавить</a>
 </div>
+
+<form method="get" action="/products" style="display:flex; gap:10px; margin-bottom:20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+    <input type="text" name="q" placeholder="Поиск по SKU или названию..." value="{{ q or '' }}" style="flex:1; padding:8px; border:1px solid #ccc; border-radius:4px;">
+    <input type="number" name="max_price" placeholder="Макс. цена" value="{{ max_price or '' }}" style="width:120px; padding:8px; border:1px solid #ccc; border-radius:4px;">
+    <button type="submit" style="width:auto; padding:8px 16px; margin:0;">Найти</button>
+    {% if q or max_price %}
+    <a href="/products" style="padding:8px 16px; text-decoration:none; color:#555; background:#eee; border-radius:4px;">Сбросить</a>
+    {% endif %}
+</form>
+
 {% if products %}
 <table class="data-table">
     <thead><tr><th>ID</th><th>SKU</th><th>Название</th><th>Мин</th><th>Цена</th><th>Действия</th></tr></thead>
@@ -13,10 +23,11 @@
         <tr>
             <td>{{ p.id }}</td>
             <td>{{ p.sku }}</td>
-            <td>{{ p.name }}</td>
+            <td><a href="/products/{{ p.id }}" style="color:#1e3a8a; font-weight:600; text-decoration:none;">{{ p.name }}</a></td>
             <td>{{ p.min_qty }}</td>
             <td>{{ p.price }}</td>
             <td>
+                <a href="/products/{{ p.id }}" class="action-btn" style="background:#e0e7ff; color:#3730a3;">👁</a>
                 <a href="/products/{{ p.id }}/edit" class="action-btn edit">✎</a>
                 <form method="post" action="/products/{{ p.id }}/delete" style="display:inline"
                       onsubmit="return confirm('Удалить {{ p.name }}?')">
@@ -28,7 +39,7 @@
     </tbody>
 </table>
 {% else %}
-<div class="alert alert-error">Товаров нет. <a href="/products/new">Создать →</a></div>
+<div class="alert alert-error">Товаров не найдено по заданным критериям.</div>
 {% endif %}
 <p class="switch"><a href="/dashboard">← В кабинет</a></p>
 {% endblock %}

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends, Form, HTTPException
+from fastapi import APIRouter, Request, Depends, Form, HTTPException, Query
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import text
@@ -13,15 +13,33 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("")
-def products_list(request: Request, db: Session = Depends(get_db),
-                  user: User = Depends(require_user)):
+def products_list(
+    request: Request, 
+    q: str = Query(None), 
+    max_price: float = Query(None), 
+    db: Session = Depends(get_db),
+    user: User = Depends(require_user)
+):
+    query = "SELECT id, sku, name, min_qty, price FROM products WHERE 1=1"
+    params = {}
+    
+    if q:
+        query += " AND (name LIKE :q OR sku LIKE :q)"
+        params["q"] = f"%{q}%"
+    if max_price is not None:
+        query += " AND price <= :max_price"
+        params["max_price"] = max_price
+        
+    query += " ORDER BY id"
+    
     try:
-        rows = db.execute(text("SELECT id, sku, name, min_qty, price FROM products ORDER BY id")).fetchall()
+        rows = db.execute(text(query), params).fetchall()
         products = [dict(r._mapping) for r in rows]
     except Exception:
         products = []
+        
     return templates.TemplateResponse(request, "products.html",
-        {"products": products, "user": user})
+        {"products": products, "user": user, "q": q, "max_price": max_price})
 
 
 @router.get("/new")
@@ -58,6 +76,17 @@ def product_create(request: Request,
     return RedirectResponse(url="/products", status_code=303)
 
 
+@router.get("/{product_id}")
+def product_detail(product_id: int, request: Request,
+                   db: Session = Depends(get_db),
+                   user: User = Depends(require_user)):
+    row = db.execute(text("SELECT * FROM products WHERE id = :id"), {"id": product_id}).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Товар не найден")
+    return templates.TemplateResponse(request, "product_detail.html",
+        {"user": user, "product": dict(row._mapping)})
+
+
 @router.get("/{product_id}/edit")
 def product_edit_form(product_id: int, request: Request,
                       db: Session = Depends(get_db),
@@ -65,7 +94,8 @@ def product_edit_form(product_id: int, request: Request,
     row = db.execute(text("SELECT id, sku, name, min_qty, price FROM products WHERE id = :id"),
                      {"id": product_id}).first()
     if not row:
-        raise HTTPException(status_code=404, detail="Товар не найден")
+        return templates.TemplateResponse(request, "product_form.html",
+            {"user": user, "product": None, "error": f"Товар с id={product_id} не найден"}, status_code=404)
     return templates.TemplateResponse(request, "product_form.html",
         {"user": user, "product": dict(row._mapping)})
 
