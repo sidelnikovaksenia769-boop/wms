@@ -1,13 +1,33 @@
 {% extends "base.html" %}
 {% block title %}Панель — WMS{% endblock %}
 {% block content %}
+
+<!-- СЛАЙДЕР -->
+<div class="slider-container">
+    <div class="slider">
+        <div class="slide" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
+            <h3>Добро пожаловать в WMS</h3>
+            <p>Управляйте складом эффективно</p>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #065f46, #10b981);">
+            <h3>Контроль остатков</h3>
+            <p>Всегда знайте, что есть на складе</p>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #991b1b, #ef4444);">
+            <h3>Быстрая отгрузка</h3>
+            <p>Оформляйте документы в пару кликов</p>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #4c1d95, #8b5cf6);">
+            <h3>Аналитика и отчеты</h3>
+            <p>Следите за оборачиваемостью товаров</p>
+        </div>
+    </div>
+</div>
+<!-- КОНЕЦ СЛАЙДЕРА -->
+
 <h2>Добро пожаловать, {{ user.full_name or user.username }}!</h2>
 <p class="subtitle">Роль: <span class="role-badge role-{{ user.role }}">{{ user.role }}</span></p>
-<div class="dashboard-info">
-    <p>Логин: <code>{{ user.username }}</code></p>
-    <p>Email: <code>{{ user.email }}</code></p>
-    <p>Создан: {{ user.created_at.strftime("%d.%m.%Y %H:%M") }}</p>
-</div>
+
 <div class="nav-menu">
     <a class="nav-btn" href="/profile">Личный кабинет</a>
     <a class="nav-btn" href="/products">Товары</a>
@@ -16,4 +36,25 @@
     {% endif %}
 </div>
 <a class="btn-logout" href="/auth/logout">Выйти</a>
+
+<!-- Скрипт автопрокрутки слайдера (каждые 3 секунды) -->
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.style.opacity = (i === index) ? '1' : '0';
+            slide.style.zIndex = (i === index) ? '1' : '0';
+        });
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    showSlide(0);
+    setInterval(nextSlide, 3000); // 3000 мс = 3 секунды
+</script>
 {% endblock %}

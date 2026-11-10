@@ -6,15 +6,49 @@
     <title>{% block title %}WMS{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
-    <div class="auth-wrapper">
-        <div class="auth-card">
-            <div class="brand">
-                <h1>WMS</h1>
-                <p class="subtitle">Система управления складом</p>
-            </div>
-            {% block content %}{% endblock %}
+<body class="{% if user %}app-layout{% else %}auth-layout{% endif %}">
+
+    {% if user %}
+    <!-- БОКОВОЕ МЕНЮ (СВЕТЛОЕ) -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h1>WMS</h1>
+            <p>Управление складом</p>
         </div>
-    </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="nav-link">🏠 Панель</a>
+            <a href="/products" class="nav-link">📦 Товары</a>
+            <a href="/profile" class="nav-link">👤 Профиль</a>
+            {% if user.role == "admin" %}
+            <a href="/admin" class="nav-link" style="color: #0284c7; font-weight: 600;">⚙️ Админка</a>
+            {% endif %}
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <strong>{{ user.username }}</strong>
+                <span class="role-badge role-{{ user.role }}">{{ user.role }}</span>
+            </div>
+            <a href="/auth/logout" class="btn-logout">Выйти</a>
+        </div>
+    </aside>
+    {% endif %}
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="main-content">
+        {% if not user %}
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <div class="brand" style="text-align:center; margin-bottom:20px;">
+                    <h1>WMS</h1>
+                    <p class="subtitle">Система управления складом</p>
+                </div>
+                {% block auth_content %}{% endblock %}
+            </div>
+        </div>
+        {% else %}
+            {% block content %}{% endblock %}
+        {% endif %}
+    </main>
+
 </body>
 </html>

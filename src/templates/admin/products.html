@@ -1,22 +1,56 @@
 {% extends "base.html" %}
-{% block title %}Все товары — Админ{% endblock %}
+{% block title %}Товары — Админ{% endblock %}
 {% block content %}
-<h2>Все товары (Админ)</h2>
-<table class="data-table">
-    <thead><tr><th>ID</th><th>SKU</th><th>Название</th><th>Цена</th><th>Остаток</th><th>Создан</th></tr></thead>
-    <tbody>
-    {% for p in products %}
-        <tr>
-            <td>{{ p.id }}</td>
-            <td>{{ p.sku }}</td>
-            <td>{{ p.name }}</td>
-            <td>{{ p.price }}</td>
-            <td>{{ p.min_qty }}</td>
-            <td>{{ p.created_at }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<h2>Управление товарами</h2>
+
+<form method="get" action="/admin/products" style="margin-bottom:15px; display:flex; gap:10px;">
+    <select name="sort" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+        <option value="id" {% if sort=='id' %}selected{% endif %}>По ID</option>
+        <option value="name" {% if sort=='name' %}selected{% endif %}>По названию</option>
+        <option value="price" {% if sort=='price' %}selected{% endif %}>По цене</option>
+    </select>
+    <select name="order" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+        <option value="asc" {% if order=='asc' %}selected{% endif %}>По возрастанию</option>
+        <option value="desc" {% if order=='desc' %}selected{% endif %}>По убыванию</option>
+    </select>
+    <button type="submit" style="width:auto; margin:0; padding:8px 16px;">Применить</button>
+</form>
+
+<div style="overflow-x:auto;">
+    <table class="data-table">
+        <thead><tr><th>ID</th><th>SKU</th><th>Название</th><th>Цена</th><th>Статус</th><th>Действие</th></tr></thead>
+        <tbody>
+        {% for p in products %}
+            <tr>
+                <td>{{ p.id }}</td>
+                <td>{{ p.sku }}</td>
+                <td>{{ p.name }}</td>
+                <td>{{ p.price }}</td>
+                <td>{{ "Активен" if p.is_active else "Скрыт" }}</td>
+                <td>
+                    <form method="post" action="/admin/products/{{ p.id }}/toggle" style="display:inline">
+                        <button type="submit" class="action-btn edit" style="padding:4px 8px;">
+                            {{ "Скрыть" if p.is_active else "Вернуть" }}
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- ПАГИНАЦИЯ -->
+<div style="display:flex; justify-content:center; gap:10px; margin-top:20px; align-items:center;">
+    {% if page > 1 %}
+        <a href="/admin/products?page={{ page-1 }}&sort={{ sort }}&order={{ order }}" class="nav-btn">← Назад</a>
+    {% endif %}
+    <span>Страница {{ page }} из {{ total_pages }}</span>
+    {% if page < total_pages %}
+        <a href="/admin/products?page={{ page+1 }}&sort={{ sort }}&order={{ order }}" class="nav-btn">Вперед →</a>
+    {% endif %}
+</div>
+
 <div class="nav-menu" style="margin-top:20px;">
     <a href="/admin" class="nav-btn" style="background:#6b7280;">← В админку</a>
 </div>
